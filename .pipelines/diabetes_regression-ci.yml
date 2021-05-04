@@ -34,7 +34,7 @@ stages:
     timeoutInMinutes: 0
     steps:
     - template: code-quality-template.yml
-    - task: AzureCLI@1
+    - task: AzureCLI@2
       inputs:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
         scriptLocation: inlineScript

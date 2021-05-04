@@ -34,13 +34,24 @@ stages:
     timeoutInMinutes: 0
     steps:
     - template: code-quality-template.yml
+    - task: AzureCLI@2
+      displayName: 'CLI Test Jorgg'
+      inputs:
+        azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
+        scriptType: bash
+        scriptLocation: inlineScript
+        workingDirectory: $(Build.SourcesDirectory)
+        inlineScript: |          
+          az account list
+          az login --allow-no-subscription
     - task: AzureCLI@1
       inputs:
         azureSubscription: '$(WORKSPACE_SVC_CONNECTION)'
         scriptLocation: inlineScript
         workingDirectory: $(Build.SourcesDirectory)
-        inlineScript: |
+        inlineScript: |		      
           set -e # fail on error
+          az account list
           export SUBSCRIPTION_ID=$(az account show --query id -o tsv)
           # Invoke the Python building and publishing a training pipeline
           python -m ml_service.pipelines.diabetes_regression_build_train_pipeline
